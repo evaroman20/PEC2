@@ -2,11 +2,13 @@ import sys
 from colorama import init, Fore, Style
 import os
 
+"""Limpia la pantalla de la terminal según el sistema operativo."""
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 init(autoreset=True)
 
+"""Construye la estructura de una tarea con nombre, completada, prioridad y fecha límite."""
 def crear_estructura_tarea(nombre: str, **kwargs: str):
     
     tarea = {
@@ -19,14 +21,16 @@ def crear_estructura_tarea(nombre: str, **kwargs: str):
     tarea.update(kwargs)
     return tarea
 
+"""Añade una tarea a la lista de tareas y devuelve un mensaje de éxito."""
 def añadir_tarea(nombre: str, **kwargs: str):
     tarea = crear_estructura_tarea(nombre, **kwargs)
     return f"Tarea '{tarea['nombre']}' añadida con éxito."
-    
 
+"""Crea una lista de todas las tareas registradas y devuelve una lista de estructuras de tareas."""
 def listar_tareas():
      return [crear_estructura_tarea("Tarea de ejemplo", prioridad="Media", fecha_límite="2024-12-31")]
 
+"""Busca tareas por una palabra clave y devuelve una lista de estructuras de tareas."""
 def buscar_tarea(clave: str):
     nombre = input("Introduce el nombre de la tarea a listar (o presiona Enter para listar todas): ")
     if nombre:
@@ -35,6 +39,7 @@ def buscar_tarea(clave: str):
                 print(f"{Fore.RED}No se encontraron tareas con el nombre '{nombre}'.")
                 return []
 
+"""Muestra el menú principal de la aplicación CLI."""
 def mostrar_menu():
 
     print(f"\n{Fore.YELLOW}{Style.BRIGHT}------ GESTOR DE TAREAS CLI ------\n")
@@ -44,6 +49,7 @@ def mostrar_menu():
     print("3. Buscar Tarea")
     print("4. Salir")
 
+"""Inicia la aplicación CLI y gestiona el flujo de interacción con el usuario."""
 def iniciar_app():
 
     while True:
