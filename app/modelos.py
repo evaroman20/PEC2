@@ -1,6 +1,5 @@
 import os
 
-
 """Limpia la pantalla de la terminal según el sistema operativo."""
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -10,7 +9,6 @@ def crear_estructura_tarea(nombre: str, **kwargs: str) -> dict:
         "nombre": nombre,
         "completada": False,
         "prioridad": kwargs.get("prioridad", "No especificada"),
-        "fecha_límite": kwargs.get("fecha_límite", "No especificada")
     }
     tarea.update(kwargs)
     return tarea
