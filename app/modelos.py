@@ -8,7 +8,7 @@ def crear_estructura_tarea(nombre: str, **kwargs: str) -> dict:
     tarea = {
         "nombre": nombre,
         "completada": False,
-        "prioridad": kwargs.get("prioridad", "No especificada"),
+        "prioridad": kwargs.get("PRIORIDAD", "SIN ESPECIFICAR")  # Valor por defecto si no se proporciona prioridad
     }
     tarea.update(kwargs)
     return tarea

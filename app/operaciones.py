@@ -35,10 +35,10 @@ def iniciar_app():
                 print(f"\n{Fore.RED}El nombre de la tarea no puede estar vacío.\n")
                 continue
 
-            prioridad = input("Prioridad (Opcional - Presiona Enter para saltar): ")
+            prioridad = input("PRIORIDAD (Opcional - Presiona Enter para saltar): ")
        
             if prioridad:
-                mensaje = GESTOR_TAREAS.añadir_tarea(nombre, prioridad=prioridad)
+                mensaje = GESTOR_TAREAS.añadir_tarea(nombre, PRIORIDAD = (prioridad).capitalize())
             else:
                 mensaje = GESTOR_TAREAS.añadir_tarea(nombre)
             print(f"\n{Fore.GREEN}{mensaje}\n")
