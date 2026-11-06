@@ -1,100 +1,77 @@
 import sys
 from colorama import init, Fore, Style
-import os
+from app.modelos import clear_screen, GESTOR_TAREAS
 
-"""Limpia la pantalla de la terminal según el sistema operativo."""
-def clear_screen():
-    os.system('cls' if os.name == 'nt' else 'clear')
-
+"""Inicia colorama"""
 init(autoreset=True)
 
-"""Construye la estructura de una tarea con nombre, completada, prioridad y fecha límite."""
-def crear_estructura_tarea(nombre: str, **kwargs: str):
-    
-    tarea = {
-        "nombre": nombre,
-        "completada": False,
-        "prioridad": kwargs.get("prioridad", "Baja"),
-        "fecha_límite": kwargs.get("fecha_límite", "No especificada")
-    }
-    
-    tarea.update(kwargs)
-    return tarea
-
-"""Añade una tarea a la lista de tareas y devuelve un mensaje de éxito."""
-def añadir_tarea(nombre: str, **kwargs: str):
-    tarea = crear_estructura_tarea(nombre, **kwargs)
-    return f"Tarea '{tarea['nombre']}' añadida con éxito."
-
-"""Crea una lista de todas las tareas registradas y devuelve una lista de estructuras de tareas."""
-def listar_tareas():
-     return [crear_estructura_tarea("Tarea de ejemplo", prioridad="Media", fecha_límite="2024-12-31")]
-
-"""Busca tareas por una palabra clave y devuelve una lista de estructuras de tareas."""
-def buscar_tarea(clave: str):
-    nombre = input("Introduce el nombre de la tarea a listar (o presiona Enter para listar todas): ")
-    if nombre:
-            tareas = buscar_tarea(nombre)
-            if not nombre in tareas:
-                print(f"{Fore.RED}No se encontraron tareas con el nombre '{nombre}'.")
-                return []
 
 """Muestra el menú principal de la aplicación CLI."""
 def mostrar_menu():
 
-    print(f"\n{Fore.YELLOW}{Style.BRIGHT}------ GESTOR DE TAREAS CLI ------\n")
-
+    print(f"\n{Fore.YELLOW}{Style.BRIGHT}------ GESTOR DE TAREAS ------\n")
     print("1. Añadir Tarea")
     print("2. Listar Tareas")
     print("3. Buscar Tarea")
     print("4. Salir")
 
+
 """Inicia la aplicación CLI y gestiona el flujo de interacción con el usuario."""
 def iniciar_app():
+
+    clear_screen()
 
     while True:
 
         mostrar_menu()
-
         opcion = input(f"\n{Fore.YELLOW}Selecciona una opción:\n")
 
         if opcion == "1":
-            nombre = input("Nombre de la tarea: ")
+            clear_screen()
+            nombre = input("Nombre de la tarea:\n")
+            if not nombre.strip():
+                print(f"\n{Fore.RED}El nombre de la tarea no puede estar vacío.\n")
+                continue
+
             prioridad = input("Prioridad (Opcional - Presiona Enter para saltar): ")
        
             if prioridad:
-                mensaje = añadir_tarea(nombre, prioridad=prioridad)
+                mensaje = GESTOR_TAREAS.añadir_tarea(nombre, prioridad=prioridad)
             else:
-                mensaje = añadir_tarea(nombre)
-            print(f"{Fore.GREEN}{mensaje}")
-            clear_screen()        
-
+                mensaje = GESTOR_TAREAS.añadir_tarea(nombre)
+            print(f"\n{Fore.GREEN}{mensaje}\n")
+            
         elif opcion == "2":
-            tareas = listar_tareas()
+            clear_screen()
+            tareas = GESTOR_TAREAS.listar_tareas()
             if not tareas:
-                print(f"{Fore.RED}No hay tareas registradas.")
+                print(f"\n{Fore.RED}No hay tareas registradas todavía.\n")
             else:
-                print(f"\n{Fore.YELLOW}------ LISTA DE TAREAS ------")
+                print(f"\n{Fore.YELLOW}------ LISTA DE TAREAS ------\n")
                 for i, t in enumerate(tareas, 1):
                     extra = ", ".join([f"{k}: {v}" for k, v in t.items() if k not in ["nombre", "completada"]])
                     detalles = f" ({extra})" if extra else ""
-                    print(f"{i}. [{ '✓' if t['completada'] else ' ' }] {t['nombre']}{detalles}")
-                    clear_screen()
+                    print(f"{i}. [{ '✅' if t['completada'] else '❌' }] {t['nombre']}{detalles}")
 
         elif opcion == "3":
-            clave = input("Introduce la palabra clave a buscar: ")
-            resultados = buscar_tarea(clave)
-            if not resultados:
-                print(f"{Fore.RED}No se encontraron tareas.")
-            else:
-                print(f"\n{Fore.GREEN}--- RESULTADOS DE BÚSQUEDA ---")
-                for t in resultados:
-                    print(f"- {t['nombre']}")
-                    clear_screen()
-
-        elif opcion == "4":
-            print(f"{Fore.BLUE}¡Hasta luego!")
-            sys.exit()
             clear_screen()
+            print(f"\n{Fore.YELLOW}------ BUSCAR TAREAS ------\n")
+            clave = input("Introduce la palabra clave a buscar: ")
+            resultados = GESTOR_TAREAS.buscar_tarea(clave)
+            
+            if clave not in resultados:
+                print(f"\n{Fore.RED}No se encontraron tareas que coincidan con '{clave}'.\n")
+            else:
+                print(f"\n{Fore.GREEN}--- RESULTADOS DE BÚSQUEDA ---\n")
+                for t in resultados:
+                    extra = ", ".join([f"{k}: {v}" for k, v in t.items() if k not in ["nombre", "completada"]])
+                    detalles = f" ({extra})" if extra else ""
+                    print(f"- {t['nombre']}{detalles}")
+                
+        elif opcion == "4":
+            clear_screen()
+            print(f"\n{Fore.YELLOW}¡Hasta luego!\n")
+            sys.exit()
         else:
-            print(f"{Fore.RED}Opción no válida. Intenta de nuevo.")
+            clear_screen()
+            print(f"\n{Fore.RED}Opción no válida. Intenta de nuevo.\n")
