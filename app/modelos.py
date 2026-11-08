@@ -8,7 +8,7 @@ def crear_estructura_tarea(nombre: str, **kwargs: str) -> dict:
     tarea = {
         "nombre": nombre,
         "completada": False,
-        "prioridad": kwargs.get("PRIORIDAD", "SIN ESPECIFICAR")  # Valor por defecto si no se proporciona prioridad
+        "prioridad": kwargs.get("prioridad", "SIN ESPECIFICAR")
     }
     tarea.update(kwargs)
     return tarea
@@ -18,7 +18,6 @@ class GestorTareas:
     
     def __init__(self):
         self.BASE_DE_TAREAS = []
-
 
     """Añade una tarea a la lista de tareas y devuelve un mensaje de éxito."""
     def añadir_tarea(self, nombre: str, **kwargs: str) -> str:
